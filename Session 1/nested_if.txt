@@ -1,0 +1,15 @@
+n = int(input("Enter n:"))
+
+if n>=20 and n <= 60:
+	print("okay")
+
+else:
+	print("Not okay")
+
+#if n >= 20:
+#	if n <= 60:
+#		print("okay")
+#	else:
+#		print("Not okay")
+#else:
+#	print("Not okay")

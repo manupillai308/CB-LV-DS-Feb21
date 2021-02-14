@@ -1,0 +1,12 @@
+n = int(input("Enter number:"))
+
+sum = 0
+i = 0
+
+while i<=n:
+	sum += i # sum = sum + i
+	
+	i += 1
+
+print("Your sum:", sum)
+#print(sum)

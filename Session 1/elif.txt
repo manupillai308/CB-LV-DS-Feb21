@@ -1,0 +1,8 @@
+x = 10
+
+if x > 10:
+	print("x is greater than 10")
+elif x < 30: #else if
+	print("x is between 10 and 30")
+else:
+	print("x is greater than 30")
