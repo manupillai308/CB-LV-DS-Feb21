@@ -6,12 +6,15 @@ def factorial(n):
     
     return fact
 
-class ABC:
+class ABCDEFGHIJKL:
     def my_function():
         print("I m from module1")
 
 
 var = "I m in module1"
+
+
+# __all__ = ['factorial', 'ABC', 'var']
 
 # print(factorial(10))
 

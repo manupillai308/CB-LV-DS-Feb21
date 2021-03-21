@@ -1,6 +1,6 @@
 # import module1
 # from module1 import factorial, var, ABC
-from module1 import *
+# from module1 import *
 
 # print(factorial(10))
 
@@ -12,6 +12,13 @@ from module1 import *
 # module1.ABC.my_function()
 
 
-print(factorial(10))
-print(var)
-print(ABC)
+# print(factorial(10))
+# print(var)
+# print(ABC)
+
+from module1 import ABCDEFGHIJKL as newname
+
+
+print(newname)
+# print(ABCDEFGHIJKL) # this wont work
+
