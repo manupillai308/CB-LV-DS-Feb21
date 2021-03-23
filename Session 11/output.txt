@@ -1,0 +1,14 @@
+ Volume in drive C has no label.
+ Volume Serial Number is EE53-7A4B
+
+ Directory of C:\Users\Manu\Desktop\CB-LV-DS-Feb21\Session 11
+
+23-03-2021  20:21    <DIR>          .
+23-03-2021  20:21    <DIR>          ..
+23-03-2021  20:06               710 ioStream.py
+23-03-2021  20:05                 7 myinput.txt
+23-03-2021  20:08                17 myoutput.txt
+23-03-2021  20:10             8,020 notebook.ipynb
+23-03-2021  20:23                 0 output.txt
+               5 File(s)          8,754 bytes
+               2 Dir(s)  227,524,608,000 bytes free
