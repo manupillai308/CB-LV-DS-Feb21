@@ -24,3 +24,5 @@ thread1.start()
 thread2.start()
 thread3.start()
 
+thread1.join()
+print("hey")
