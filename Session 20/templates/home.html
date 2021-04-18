@@ -1,0 +1,27 @@
+<html>
+    <head>
+        <title>Home</title>
+        <script>
+            function submit_form(){
+                let element = document.getElementById("fname");
+                let data = element.value;
+                fetch("/", {method:"POST", headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({fname: data})})
+                .then(response => response.json())
+                .then(data=>{
+                    document.getElementById("field").innerHTML = data.data;
+                });
+            }
+        </script>
+    </head>
+    <body>
+        <h3>Welcome to Home</h3>
+        <form action="/" method="POST">
+            <label for="fname">Name</label><br>
+            <input type="text" id="fname" name="fname"><br>
+            <!-- <input type="submit" value="Submit"> -->
+          </form>
+          <button name="Submit" onclick="submit_form()">Submit</button>
+        <p id="field"></p>
+    </body>
+</html>

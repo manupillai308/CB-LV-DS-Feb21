@@ -1,0 +1,20 @@
+<html>
+    <head>
+        <title>Home</title>
+    </head>
+    <body>
+        <h3>Welcome {{ username }}</h3>
+        <table>
+            <tr>
+              <th>Username</th>
+              <th>Count</th>
+            </tr>
+            {% for i in range(count) %}
+            <tr>
+              <td>{{ username }}</td>
+              <td>{{ i }}</td>
+            </tr>
+            {% endfor %}
+          </table>
+    </body>
+</html>
