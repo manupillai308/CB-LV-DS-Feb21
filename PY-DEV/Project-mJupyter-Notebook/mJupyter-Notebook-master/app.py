@@ -1,11 +1,17 @@
 _base_namespace = {"globals": {key:value for (key, value) in globals().items()}, "locals":{key:value for (key, value) in locals().items()}}
-from flask import Flask, render_template, request, jsonify, redirect, url_for
-import time, sys, traceback, glob, os, webbrowser
+from flask import Flask, render_template, request, jsonify
+import sys, traceback, glob, os, webbrowser
 from io import StringIO
 
 _stdin, _stdout, _stderr = sys.stdin, sys.stdout, sys.stderr
 
 app = Flask(__name__)
+
+
+@app.before_request
+def print_namespace():
+    # print("namespaces:", namespaces)
+    pass
 
 def get_namespace():
     _globals = {key:value for (key, value) in _base_namespace["globals"].items()}
@@ -13,8 +19,14 @@ def get_namespace():
 
     return {"globals":_globals, "locals":_locals}
 
-namespaces = []
+namespaces = [] # [{"notebook_name": notebook_name, "namespace": {"globals": {}, "locals": {}}}]
 
+def get_index(notebook_name):
+    for i, namespace in enumerate(namespaces):
+        if namespace["notebook_name"] == notebook_name:
+            return i
+    
+    return -1
 
 def postProcess(data):
     output = "<pre>"
@@ -29,7 +41,7 @@ def postProcess(data):
 
 @app.route("/")
 def home():
-    notebooks = [{"name":notebook.split(".mipynb")[-2].split("/")[-1], "link":f"/nb/{notebook}"} for notebook in glob.glob("./*.mipynb")]
+    notebooks = [{"name":notebook.split(".mipynb")[-2].split("/")[-1], "link":f"/nb/{notebook}"} for notebook in glob.glob("*.mipynb")]
     return render_template("home.html", notebooks=notebooks)
 
 @app.route("/nb/<notebook_name>")
@@ -59,12 +71,6 @@ def save():
 
     return jsonify({"saved": True})
 
-def get_index(notebook_name):
-    for i, namespace in enumerate(namespaces):
-        if namespace["notebook_name"] == notebook_name:
-            return i
-    
-    return -1
 
 @app.route("/stop", methods=["POST"])
 def stop():
@@ -89,6 +95,7 @@ def run():
     stderr = StringIO()
 
     sys.stdout, sys.stderr, sys.stdin = stdout, stderr, stdin
+    # sys.stdout, sys.stderr = stdout, stderr
     
     code = request.json["code"]
     notebook_name = request.json["notebook_name"]
