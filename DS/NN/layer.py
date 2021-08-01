@@ -10,14 +10,15 @@ class Dot:
 
     def grad_w(self, X):
         I = np.identity(self.b.shape[0])
-        grad = np.stack([I]*self.W.shape[0], axis=1)*X
-        return np.transpose(grad, [1, 0, 2])
+        m1 = np.stack([I]*self.W.shape[0], axis=1)
+        grad = np.einsum('ijk,jm->mijk', m1, X)
+        return grad
     
-    def grad_b(self):
-        return np.identity(self.b.shape[0])
+    def grad_b(self, X):
+        return np.stack([np.identity(self.b.shape[0])]*X.shape[1], axis=0)
 
-    def grad_input(self):
-        return self.W.T
+    def grad_input(self, X):
+        return np.stack([self.W.T]*X.shape[1], axis=0)
     
     def get_output_size(self):
         return self.b.shape
@@ -32,7 +33,6 @@ class Dot:
         elif method == "maximize":
             self.W = optimizer.maximize(self.W, gradW)
             self.b = optimizer.maximize(self.b, gradb)
-
 
 class Dense:
     
@@ -54,17 +54,18 @@ class Dense:
     def grad_parameters(self, X):
         da_dI = self.activation.grad_input(self.dot(X))
         dI_dw = self.dot.grad_w(X)
-        da_dw = da_dI.dot(dI_dw)
-        dI_db = self.dot.grad_b()
-        da_db = da_dI.dot(dI_db)
-        return (np.transpose(da_dw, [1,0,2]), da_db)
+        da_dw = np.einsum('mij,mjkl->mikl', da_dI, dI_dw)
+        
+        dI_db = self.dot.grad_b(X)
+        da_db = np.einsum('mij,mjk->mik', da_dI, dI_db)
+        return (da_dw, da_db)
     
     def grad_input(self, X):
         g1 = self.activation.grad_input(self.dot(X))
 
-        g2 = self.dot.grad_input()
+        g2 = self.dot.grad_input(X)
 
-        return g1.dot(g2)
+        return np.einsum('mij,mjk->mik', g1, g2)
     
     def update(self, grad_w, grad_b, optimizer, method="minimize"):
         self.dot.update(grad_w, grad_b, optimizer, method)

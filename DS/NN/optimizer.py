@@ -17,3 +17,4 @@ class GradientDescentOptimizer:
         return X + (self.learning_rate*grad_X)
 
         
+        

@@ -14,8 +14,13 @@ class BinaryCrossEntropy:
         return -1 * (y_zero + y_one)
     
     def grad_input(self, X, y_true):
-        if y_true == 0:
-            return 1/(1-X)
-        else:
-            return -1/X 
+        ix_zeros = np.arange(0, y_true.shape[0])[y_true.reshape(-1) == 0]
+        ix_ones = np.arange(0, y_true.shape[0])[y_true.reshape(-1) == 1]
+
+        grad = np.empty((y_true.shape[0], 1, 1), dtype="float")
+        grad[ix_zeros] = 1/(1-X[:, ix_zeros].reshape(-1,1,1))
+        grad[ix_ones] = -1/X[:, ix_ones].reshape(-1,1,1)
+
+        return grad        
+
         
