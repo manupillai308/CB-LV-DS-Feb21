@@ -44,7 +44,6 @@ class Sequential:
             
             progress_bar = self.__progress_bar(50, int(50*batch_size/X.shape[0]))
             for (X_batch, y_batch) in self.get_batch(X, y, batch_size):
-                time.sleep(0.01)
                 _, outputs, _gradients_ = self.forward_propagation(X_batch)
                 grads = self.backward_propagation(outputs, _gradients_, y_batch.reshape(-1,1))
                 self._update_params(grads)
