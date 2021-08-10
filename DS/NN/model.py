@@ -81,12 +81,9 @@ class Sequential:
         grad_loss = self.loss.grad_input(outputs[-1], y)
         outputs = outputs[:-1]
         grads = []
-        for grad, output in list(zip(gradients, outputs))[::-1]:
-            grad_w = np.einsum('mij,mjkl->mikl', grad_loss, grad["w"]).sum(axis=0)[0]
-            grad_b = np.einsum('mij,mjk->mik', grad_loss, grad["b"]).sum(axis=0).T
+        for grad, output, layer in list(zip(gradients, outputs, self.layers))[::-1]:
+            grad_w, grad_b, grad_loss = layer.backprop_grad(grad_loss, grad)
             grads.append((grad_w, grad_b))
-
-            grad_loss = np.einsum('mij,mjk->mik', grad_loss, grad["input"])
         
         return grads
     

@@ -67,6 +67,14 @@ class Dense:
 
         return np.einsum('mij,mjk->mik', g1, g2)
     
+    @staticmethod
+    def backprop_grad(grad_loss, grad):
+        grad_w = np.einsum('mij,mjkl->mikl', grad_loss, grad["w"]).sum(axis=0)[0]
+        grad_b = np.einsum('mij,mjk->mik', grad_loss, grad["b"]).sum(axis=0).T
+        grad_loss = np.einsum('mij,mjk->mik', grad_loss, grad["input"])
+
+        return grad_w, grad_b, grad_loss
+
     def update(self, grad_w, grad_b, optimizer, method="minimize"):
         self.dot.update(grad_w, grad_b, optimizer, method)
         
