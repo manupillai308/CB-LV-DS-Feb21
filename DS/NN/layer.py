@@ -37,6 +37,11 @@ class Dot:
 class Dense:
     
     def __init__(self, units, activation, input_size):
+        if isinstance(input_size, tuple):
+            if len(input_size) <= 2:
+                input_size = input_size[0]
+            else:
+                raise RuntimeError(f"Incompatible input shape, got {input_size}")
         self.units = units
         self.dot = Dot(input_size, units)
         self.activation = activation
@@ -60,6 +65,14 @@ class Dense:
         da_db = np.einsum('mij,mjk->mik', da_dI, dI_db)
         return (da_dw, da_db)
     
+    def gradient_dict(self, output):
+        grad_ = {}
+        grad_["input"] = self.grad_input(output)
+        grad_["w"], grad_["b"] = self.grad_parameters(output)
+
+        return grad_
+
+
     def grad_input(self, X):
         g1 = self.activation.grad_input(self.dot(X))
 

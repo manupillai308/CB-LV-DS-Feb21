@@ -6,8 +6,13 @@ class Sequential:
         self.loss = None
         self.outputs = []
 
-    def add(self, layer):
-        self.layers.append(layer)
+    def add(self, Layer, *args, **kwargs):
+        if not kwargs.get("input_size"):
+            if len(self.layers) > 0:
+                kwargs["input_size"] = self.layers[-1].get_output_size()
+            else:
+                raise ValueError("input_size is required for first layer in Sequential model")
+        self.layers.append(Layer(*args, **kwargs))
         return self
     
     def summary(self):
@@ -68,9 +73,7 @@ class Sequential:
         gradients = []
         for layer in self.layers:
             if not eval:
-                grad_ = {}
-                grad_["input"] = layer.grad_input(output)
-                grad_["w"], grad_["b"] = layer.grad_parameters(output)
+                grad_ = layer.gradient_dict(output)
                 gradients.append(grad_)
             output = layer.eval(output)
             outputs.append(output)
