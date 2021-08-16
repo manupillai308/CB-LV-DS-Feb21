@@ -9,3 +9,14 @@ class Sigmoid:
 
     def grad_input(self, X):
         return np.einsum('ij,im->mij', np.identity(X.shape[0]), self.eval(X)*(1 - self.eval(X)))
+
+
+class ReLU:
+    def __call__(self, X):
+        return self.eval(X)
+    
+    def eval(self, X):
+        return X*(X >= 0)
+
+    def grad_input(self, X):
+        return np.einsum('ij,im->mij', np.identity(X.shape[0]), np.ones_like(X)*(X >= 0))
